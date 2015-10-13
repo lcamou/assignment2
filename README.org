@@ -1,0 +1,301 @@
+#+OPTIONS: H:3 
+#+OPTIONS: tex:dvipng
+#+OPTIONS: toc:nil 
+#+STARTUP: align oddeven lognotestate
+#+SEQ_TODO: TODO(t) INPROGRESS(i) WAITING(w@) | DONE(d) CANCELED(c@)
+#+TAGS:       Write(w) Update(u) Fix(f) Check(c) noexport(n) export(e)
+#+Date:  
+#+TITLE: Analysis of test 1 in MA 105-53
+#+AUTHOR: Evan Misshula
+#+LANGUAGE:   en
+#+EXCLUDE_TAGS: noexport
+
+
+#+LATEX_HEADER: \usepackage{attrib}
+#+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \let\iint\undefined 
+#+LATEX_HEADER: \let\iiint\undefined 
+#+LATEX_HEADER: \usepackage{dsfont}
+#+LATEX_HEADER: \usepackage[autostyle]{csquotes}
+#+LATEX_HEADER: \usepackage[backend=biber,style=authoryear-icomp,sortlocale=de_DE,natbib=true,url=false, doi=true,eprint=false]{biblatex}
+#+LATEX_HEADER: \addbibresource{mybib.bib}
+#+LATEX_HEADER: \addbibresource{/Users/emisshula/research/citations/refs.bib} 
+#+LATEX_HEADER: \usepackage[retainorgcmds]{IEEEtrantools}
+#+LATEX_HEADER: \author{Misshula, Evan\\ \texttt{Criminal Justice, CUNY Graduate Center}}
+# \bibliography{/Users/emisshula/research/citations/refs.bib} 
+
+
+
+
+* Initialize languages 						   :noexport:
+** org file
+   [[file:initialize.org]]
+** process shootings
+###   #+INCLUDE: "/home/evan/Documents/doug/ma105/hw/analyze.org" src org
+   [[file:analyze.org]]
+#+NAME: get_the_data_test_hw
+#+BEGIN_SRC R :session *test1* :exports none :results output silent
+setwd("/home/evan/Documents/doug/ma105/hw")
+df <- read.table(file = "testData.csv",header = TRUE,sep = ",",as.is = TRUE)
+#+END_SRC
+
+#+Name: exlude_non_attending
+#+BEGIN_SRC R :session *test1* :exports none :results output silent
+  df <- df[df$id1!="ckelly4553@jjay.cuny",]
+#+END_SRC
+
+
+#+Name: create_statSum
+#+BEGIN_SRC R :session *test1* :exports none :results output silent
+  summary(as.numeric(df$test1))
+  statSum <- data.frame(statistic=names(summary(as.numeric(df$test1))),
+                        value=as.numeric(summary(as.numeric(df$test1))))
+
+#+end_src
+
+#+Name: create-statSum-ascii
+#+BEGIN_SRC R :session *test1* :exports none :results output
+  library(ascii)
+  options(warn=-1)
+  t1<-"Six point summary of test1 distribution"
+  b<-ascii(statSum,
+           header=TRUE,
+           include.rownames=FALSE,
+           caption=t1)
+  print(b,type="org")
+#+END_SRC
+
+#+RESULTS: create-statSum-ascii
+: #+CAPTION: Six point summary of test1 distribution
+: | statistic | value |
+: |-----------+-------|
+: | Min.      | 25.00 |
+: | 1st Qu.   | 35.00 |
+: | Median    | 50.00 |
+: | Mean      | 51.36 |
+: | 3rd Qu.   | 65.00 |
+: | Max.      | 90.00 |
+
+#+Name: create-hist-test1
+#+BEGIN_SRC R :session *test1* :exports none :results output silent
+jpeg("distTest1.jpg")
+hist(as.numeric(df$test1),
+     main= "",
+     xlab="score",
+     ylab="frequency",
+     col="blue")
+dev.off()
+#+End_src
+
+#+Name: create-boxWhiskers-test1
+#+BEGIN_SRC R :session *test1* :exports none :results output silent
+jpeg("boxPlot.jpg")
+boxplot(as.numeric(df$test1),
+        main= "box plot of test1 distribution",
+        xlab="test scores",
+        ylab="percentile")
+dev.off()
+#+End_src
+
+
+#+Name: compute_num_attempts
+#+BEGIN_SRC R :session *test1* :exports none :results output silent
+hwR <- df[,c("id1",
+             "numR1",
+             "numR2",
+             "numR3",
+             "numR4",
+             "numR5",
+             "numR6",
+             "numR7",
+             "numR8")]
+
+hw2 <- hwR
+
+hw2$numR1 <- NA
+hw2$numR1[hwR$numR1!="NS" & hwR$numR1!="ND" & hwR$numR1!="0"] <- hwR$numR1[hwR$numR1!="NS" & hwR$numR1!="ND" & hwR$numR1!="0"]
+
+hw2$numR2 <- NA
+hw2$numR2[hwR$numR2!="NS" & hwR$numR2!="ND" & hwR$numR2!="0"] <- hwR$numR2[hwR$numR2!="NS" & hwR$numR2!="ND" & hwR$numR2!="0"]
+
+
+hw2$numR3 <- NA
+hw2$numR3[hwR$numR3!="NS" & hwR$numR3!="ND" & hwR$numR3!="0"] <- hwR$numR3[hwR$numR3!="NS" & hwR$numR3!="ND" & hwR$numR3!="0"]
+
+
+hw2$numR4 <- NA
+hw2$numR4[hwR$numR4!="NS" & hwR$numR4!="ND" & hwR$numR4!="0"] <- hwR$numR4[hwR$numR4!="NS" & hwR$numR4!="ND" & hwR$numR4!="0"]
+
+hw2$numR5 <- NA
+hw2$numR5[hwR$numR5!="NS" & hwR$numR5!="ND" & hwR$numR5!="0"] <- hwR$numR5[hwR$numR5!="NS" & hwR$numR5!="ND" & hwR$numR5!="0"]
+
+hw2$numR6 <- NA
+hw2$numR6[hwR$numR6!="NS" & hwR$numR6!="ND" & hwR$numR6!="0"] <- hwR$numR6[hwR$numR6!="NS" & hwR$numR6!="ND" & hwR$numR6!="0"]
+
+
+hw2$numR7 <- NA
+hw2$numR7[hwR$numR7!="NS" & hwR$numR7!="ND" & hwR$numR7!="0"] <- hwR$numR7[hwR$numR7!="NS" & hwR$numR7!="ND" & hwR$numR7!="0"]
+
+
+hw2$numR8 <- NA
+hw2$numR8[hwR$numR8!="NS" & hwR$numR8!="ND" & hwR$numR8!="0"] <- hwR$numR8[hwR$numR8!="NS" & hwR$numR8!="ND" & hwR$numR8!="0"]
+
+hw3 <- apply(hw2[,-1],2,as.numeric)
+hw4 <- cbind(hwR$id1,hw3)
+numAtt <- apply(hw3,1,function(x){sum(!is.na(x))})
+#+End_Src
+
+#+Name: create_numAttempts
+#+BEGIN_SRC R :session *test1* :exports none :results output silent
+  summary(as.numeric(numAtt))
+  statSumNumAtt <- data.frame(statistic=names(summary(as.numeric(numAtt))),
+                        value=as.numeric(summary(as.numeric(numAtt))))
+
+#+end_src
+
+#+Name: create-statSumNumAtt-ascii
+#+BEGIN_SRC R :session *test1* :exports none :results output
+  options(warn=-1)
+  t1<-"Six point summary of number of homeworks attempted distribution"
+  b<-ascii(statSumNumAtt,
+           header=TRUE,
+           include.rownames=FALSE,
+           caption=t1)
+  print(b,type="org")
+#+END_SRC
+
+#+Name: create-enhanced-scatterplot
+#+BEGIN_SRC R :session *test1* :exports none :results output silent
+library(car)
+df$hwAtt <- numAtt
+df$test1 <- as.numeric(df$test1)
+
+jpeg("hwAttAndTestScore.jpg")
+scatterplot( test1 ~ hwAtt, data=df,
+   xlab="Number of HW Attempts", ylab="Test Score",
+   main="",
+   labels=row.names(df))
+dev.off()
+#+End_src
+
+
+#+Name: compute_AvgScore
+#+BEGIN_SRC R :session *test1* :exports none :results output silent
+hwP <- df[,c("id1",
+             "pct1",
+             "pct2",
+             "pct3",
+             "pct4",
+             "pct5",
+             "pct6",
+             "pct7",
+             "pct8")]
+
+hwP2 <- apply(hwP[,-1],2,function(x){as.numeric(gsub("%","",x))})
+hwP3 <- hwP2
+hwP3[is.na(hw3)] <- NA
+hwP4 <- apply(hwP3,1,function(x){mean(x,na.rm=TRUE)})
+df$AvgScore <- hwP4
+avgScore<-hwP4
+#+End_Src
+
+
+#+Name: create_avgScore
+#+BEGIN_SRC R :session *test1* :exports none :results output silent
+  summary(as.numeric(avgScore))
+  statSumAvgScore <- data.frame(statistic=names(summary(as.numeric(avgScore))),
+                        value=as.numeric(summary(as.numeric(avgScore))))
+
+#+end_src
+
+#+Name: create-statSumAvgScore-ascii
+#+BEGIN_SRC R :session *test1* :exports none :results output
+  options(warn=-1)
+  t1<-"Six point summary of number of avg homeworkscore distribution"
+  b<-ascii(statSumAvgScore,
+           header=TRUE,
+           include.rownames=FALSE,
+           caption=t1)
+  print(b,type="org")
+#+END_SRC
+
+#+RESULTS: create-statSumAvgScore-ascii
+: #+CAPTION: Six point summary of number of avg homeworkscore distribution
+: | statistic | value |
+: |-----------+-------|
+: | Min.      | 26.00 |
+: | 1st Qu.   | 74.14 |
+: | Median    | 83.90 |
+: | Mean      | 78.39 |
+: | 3rd Qu.   | 94.08 |
+: | Max.      | 98.80 |
+
+#+Name: create-enhanced-scatterplot-AvgScore
+#+BEGIN_SRC R :session *test1* :exports none :results output silent
+jpeg("hwScoreAndTestScore.jpg")
+scatterplot( test1 ~ AvgScore |hwAtt, data=df,
+   xlab="HW Score", ylab="Test Score",
+   main="Enhanced Scatter Plot",
+   labels=row.names(df))
+dev.off()
+#+End_src
+
+
+* Introduction 							     :export:
+Your second assignment is to expand on the classes assignment. The
+assignment is due on October 24, 2015. You need to submit a pull
+request on a topic branch with your firstname_lastname.  You must
+create three directories build, src and lib. All of your header files
+should be in the lib directory. Each class should have a seperate
+header file.  You should also submit a an executable file in the build 
+directory.
+
+The *Prisoner* Inheritance has a Hierarchy of 3 classes/
+- The base case is *Prisoner*
+  - A prisoner has a firstName
+  - A prisoner has a lastName
+  - Each member has a unique corrections id of the form <xxx-xxxxx>
+    where x is an integer.
+  - Data members called *sentance*,*timeServed* and *timeRemain*
+  - A member function called *credit* to give each prisoner good time
+    for time served without an infraction.
+  - A member function called *debit* to peanalize the inmates for
+    fighting.
+  - A member function *getTimeRemain* to get the time remaining
+  - A member function *reSentance* to reinitialize the prisoner's
+    time owed.
+
+The class *Jailed* is a class derived from *Prisoner*
+ - Good time is calculated as the minimum whole day the rate percent
+   of months served.
+ - An additional type of double indicating the good time rate.
+ - A constructor that received the original sentence, the time served
+   and the good time rate.
+ - A member function calculateGoodTime that returns an int indicating
+   the amount of good time earned. The Function should not change the
+   time served or the time remaining.
+ - A member function setGoodTimeRage to reset the good time rate.
+ - A member function getGoodTimeRage to get the good time rate.
+ 
+The class *Parolee* is a class derived from *Prisoner*
+- A *Jailed* person is destroyed and a parolee constructed when time
+  remaining <= 0.
+- The term of parole is floor(.33 * orginal sentence)
+
+Use the data attached to test your classes.  Write a main function to
+test your classes.  For the *Jailed* class calculate good time and
+apply it to time served. Overwrite the stream operator and write a
+function that prints the prisoners' number, firstName, lastName,
+sentence, timeServed and TimeRemaining each on a separate line.
+
+
+The Justice Department just released 6,000 prisoners:
+
+https://www.washingtonpost.com/world/national-security/justice-department-about-to-free-6000-prisoners-largest-one-time-release/2015/10/06/961f4c9a-6ba2-11e5-aa5b-f78a98956699_story.html
+
+Use the data attached to impliment a priority queue to figure out the
+six prisoners you will need to release.  You can use an array based
+priority queue if you don't want to impliment a heap.  What is the
+loss in termps of Big O notation?
+
+Print them out.
